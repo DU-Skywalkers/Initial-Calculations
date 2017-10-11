@@ -19,7 +19,7 @@ S=(100*P)+(50*C);
 Score = [Score S];
 People = [People P];
 Lug = [Lug C];
-
+    
 end 
 end
 end
@@ -46,11 +46,15 @@ LL=Lug(Location);
 LR=LL/PL;
 PW=55-LL;
 
+TennisW = PL*.125;
+Load = TennisW+LL;
+planeW = 55-Load;
+
 slx=['Max Score = $',num2str(SL)];
 plx=['Max People = ',num2str(PL)];
 llx=['Max Luggage = ',num2str(LL)];
 lrx=['Luggage Ratio = ',num2str(LR)];
-pwx=['Plane Weight = ',num2str(PW)];
+pwx=['Plane Weight = ',num2str(planeW)];
 
 disp(slx)
 disp(plx)
