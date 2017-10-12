@@ -14,7 +14,7 @@ for x = 0:1:132
     L = x;
     for y = 0:1:36
         W = y;
-        for z = 0:.01:.4
+        for z = 0:.01:1
             R = z;
             
             B = W*B_Perc;
@@ -34,16 +34,25 @@ for x = 0:1:132
 end
 
 
+plot(RP*100)
+hold on
 plot(Length)
 hold on
 plot(Width)
 hold on
-%plot(RP*100)
 legend('Length','Width','RP')
 
 
+Wing_Length = Length(2);
+Wing_Width = Width(2);
+Wing_RP = RP(2);
 
+wl=['Wing Length = ',num2str(Wing_Length)];
+ww=['Wing Width = ',num2str(Wing_Width)];
+cl=['Chamfer Location = ',num2str(Wing_RP)];
 
-
+disp(wl)
+disp(ww)
+disp(cl)
 
 
