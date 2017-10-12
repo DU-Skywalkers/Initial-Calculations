@@ -26,18 +26,18 @@ vp = 13;% take off speed m/s
 
 take = ((2*Lift)/(d*vp^2*CL));
 
-% plot (speeds,SA(2:end))
-% hold on
-% plot(vp,take,'r*')
-% ylabel('Surface area m^2')
-% xlabel('Speed m/s')
-% x1 = vp;
-% y1 = take;
-% txt1 = ['   ', num2str(vp) ,'m/s take off speed, SA =',num2str(take),'m^2'];
-% text(x1,y1,txt1);
+plot (speeds,SA(2:end))
+hold on
+plot(vp,take,'r*')
+ylabel('Surface area m^2')
+xlabel('Speed m/s')
+x1 = vp;
+y1 = take;
+txt1 = ['   ', num2str(vp) ,'m/s take off speed, SA =',num2str(take),'m^2'];
+text(x1,y1,txt1);
 
 surf = take*10.7639
-wit = (take*10.7639)/11%width in feet of wing
+wit = (take*10.7639)/11;%width in feet of wing
 
 
 %% Drag
@@ -57,12 +57,8 @@ C2 = 4.23333*10^-4;
 Thrust = C1*RPM*((diam^3.5)/sqrt(pitch))*(C2*RPM*pitch); %source: http://www.electricrcaircraftguy.com/2013/09/propeller-static-dynamic-thrust-equation.html
 %% DATA
 
-LD_Ratio = Lift/Drag;
 T_ex = Thrust - Drag;%excess thrust
-acc = T_ex/weight
-
+acc = T_ex/weight%acceleration achievable
 dis = (0.3048*170);
-
 TOV = sqrt(2*acc*dis)
-time = (2*(dis))/vp
-accel = (2*dis)/(time^2)
+time = (2*(dis))/vp;
