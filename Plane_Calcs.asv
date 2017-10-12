@@ -50,7 +50,7 @@ Drag = cd*take*0.5*d*V^2;
 
 diam = 12; %prop diameter
 pitch = 6; %prop pitch
-RPM = 36000;
+RPM = 35000;
 C1 = 4.392399*10^-8;
 C2 = 4.23333*10^-4;
 
@@ -61,8 +61,8 @@ LD_Ratio = Lift/Drag;
 T_ex = Thrust - Drag;%excess thrust
 acc = T_ex/weight
 
-dis = (0.3048*170);
+dis = (0.3048*200);
 
 TOV = sqrt(2*acc*dis)
-time = (2*(dis))/vp
-accel = (2*dis)/(time^2)
+% time = (2*(dis))/vp
+% accel = (2*dis)/(time^2)
