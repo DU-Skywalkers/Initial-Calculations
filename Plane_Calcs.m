@@ -2,14 +2,17 @@ clear all
 close all
 clc
 %% Weight -> Lift -> Drag -> Thrust
-weight = 40*.453592*9.81;%weight 55 lbs in newtons
+
+%% weight
+weight = 41*.453592*9.81;%weight 55 lbs in newtons
 
 %% Lift
 
 d = 1.225; %kg/m^3 = will be a function of altitude in final flight calc
 CL = 1.2;%Coefficient of lift
-Lift = weight;
+vp = 11;% take off speed m/s
 
+Lift = weight;
 length = 11*.3048;
 SA = 0;
 speeds = [5:1:23];
@@ -21,8 +24,6 @@ S = ((2*Lift)/(d*vel^2*CL));
 width = (S/length);%*3.28084;
 SA = [SA S];
 end
-
-vp = 13;% take off speed m/s
 
 take = ((2*Lift)/(d*vp^2*CL));
 
@@ -42,23 +43,31 @@ wit = (take*10.7639)/11;%width in feet of wing
 
 %% Drag
 
-V = vp*2.5;
+DA = 22;%drag area
+V = vp;%stall velocity
 cd = .05; %standard drag coefficient of a plane
-Drag = cd*take*0.5*d*V^2;
+
+Drag = cd*DA*0.5*d*V^2;
 
 %% Thrust
 
-diam = 12; %prop diameter
-pitch = 6; %prop pitch
-RPM = 36000;
+diami = 15;
+pitch = 6;
+
+RPM = 18000;
+
 C1 = 4.392399*10^-8;
 C2 = 4.23333*10^-4;
 
-Thrust = C1*RPM*((diam^3.5)/sqrt(pitch))*(C2*RPM*pitch); %source: http://www.electricrcaircraftguy.com/2013/09/propeller-static-dynamic-thrust-equation.html
+propC = .015;
+P = RPM*propC;
+Thrust = C1*RPM*((diami^3.5)/sqrt(pitch))*(C2*RPM*pitch); %source: http://www.electricrcaircraftguy.com/2013/09/propeller-static-dynamic-thrust-equation.html
 %% DATA
 
 T_ex = Thrust - Drag;%excess thrust
 acc = T_ex/weight%acceleration achievable
-dis = (0.3048*170);
-TOV = sqrt(2*acc*dis)
+% dis = (0.3048*170);
+%TOV = sqrt(2*acc*dis)
+dis = ((vp^2)/(2*acc))*3.28084
 time = (2*(dis))/vp;
+Thrust
