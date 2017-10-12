@@ -45,7 +45,7 @@ legend('Length','Width','RP')
 
 Wing_Length = Length(2);
 Wing_Width = Width(2);
-Wing_RP = RP(2);
+Wing_RP = RP(2)*Wing_Length;
 
 wl=['Wing Length = ',num2str(Wing_Length)];
 ww=['Wing Width = ',num2str(Wing_Width)];
