@@ -4,7 +4,7 @@ clc
 %% Weight -> Lift -> Drag -> Thrust
 
 %% weight
-weight = 41*.453592*9.81;%weight 55 lbs in newtons
+weight = 41*.453592*9.81;%weight 55  lbs in newtons
 
 %% Lift
 
