@@ -12,7 +12,7 @@ for P=10:1:100
 C=P*i;
 Q = (P*(.125))+(C);
 
-if Q<55
+if Q<35
 
 S=(100*P)+(50*C);
     
@@ -48,7 +48,7 @@ PW=55-LL;
 
 TennisW = PL*.125;
 Load = TennisW+LL;
-planeW = 55-Load;
+planeW = 40-Load;
 
 slx=['Max Score = $',num2str(SL)];
 plx=['Max People = ',num2str(PL)];

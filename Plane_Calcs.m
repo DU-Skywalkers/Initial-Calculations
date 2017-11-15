@@ -4,7 +4,7 @@ clc
 %% Weight -> Lift -> Drag -> Thrust
 
 %% weight
-weight = 41*.453592*9.81;%weight 55 lbs in newtons
+weight = 41*.453592*9.81;%weight 55  lbs in newtons
 
 %% Lift
 
@@ -37,8 +37,8 @@ y1 = take;
 txt1 = ['   ', num2str(vp) ,'m/s take off speed, SA =',num2str(take),'m^2'];
 text(x1,y1,txt1);
 
-surf = take*10.7639
-wit = (take*10.7639)/11;%width in feet of wing
+surf = take*10.76391;
+wit = (take*10.76391)/11;%width in feet of wing
 
 
 %% Drag
@@ -65,9 +65,91 @@ Thrust = C1*RPM*((diami^3.5)/sqrt(pitch))*(C2*RPM*pitch); %source: http://www.el
 %% DATA
 
 T_ex = Thrust - Drag;%excess thrust
-acc = T_ex/weight%acceleration achievable
+acc = T_ex/weight; %acceleration achievable
 % dis = (0.3048*170);
 %TOV = sqrt(2*acc*dis)
-dis = ((vp^2)/(2*acc))*3.28084
+dis = ((vp^2)/(2*acc))*3.28084;
 time = (2*(dis))/vp;
-Thrust
+
+%% Wing Shape
+
+
+prompt = 'Which point would you like to pull?';
+point = 800;%input(prompt);
+
+%prompt2 = 'What is the wing length?';
+%x = input(prompt2);
+
+B_Perc = .4;
+SA = surf*144;
+
+Length = 0;
+Width = 0;
+RP = 0;
+
+
+for x = 0:1:132
+    L = x;
+    for y = 0:1:36
+        W = y;
+        for z = .4:.01:.8
+            R = z;
+            
+            B = W*B_Perc;
+            ll = L*R;
+            
+            T = L - ll;
+            Q = W - B;
+            
+            Surf = (ll*Q)+(B*L)+((Q*T)/2);
+            
+            if Surf>SA && Surf<(SA*1.02)
+                Length = [Length L];
+                Width = [Width W];
+                RP = [RP R];                            
+            end
+            
+        end
+    end
+end
+
+Wing_Length = Length(point);
+Wing_Width = Width(point);
+Wing_RP = RP(point)*Wing_Length;
+
+figure(2)
+plot(RP*Wing_Length)
+hold on
+plot(Length)
+hold on
+plot(Width)
+hold on
+legend('RP','Length','Width')
+xlabel('Iteration')
+ylabel('Inches')
+
+
+
+%% Display
+
+Saa=['Surface Area = ',num2str(surf)];
+ac=['Acceleration = ',num2str(acc)];
+dists=['Distance = ',num2str(dis)];
+thr=['Thrust = ',num2str(Thrust)];
+
+wl=['Wing Length = ',num2str(Wing_Length/12/2)];
+ww=['Wing Width = ',num2str(Wing_Width/12)];
+cl=['Chamfer Location = ',num2str(Wing_RP/12/2)];
+
+disp('-------')
+
+disp(wl)
+disp(ww)
+disp(cl)
+
+disp('-------')
+
+disp(Saa)
+disp(ac)
+disp(dists)
+disp(thr)
