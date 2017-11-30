@@ -1,62 +1,86 @@
-clear all
-close all
-clc
-
-% Cl = 2;
-d = 1.225;
-s = 1.6129;
-L = 200*4.44822;
-dv = .00001983;
-span = 3.3528;
-Bc = .6096;
-Tc = Bc*.4;
-MAC = Bc-(2*(Bc-Tc)*(0.5*Bc+Tc)/(3*(Bc+Tc)));
-ef = .8;
-AR = span/MAC;
-
-
-
-v = 8:.25:60;
-Dps = 0;
-Dis = 0;
-
-for i = 1:length(v)
+speed = 0;
+t=0;
+for i=0:1:55;
     
-Re = (d*v(i)*MAC)/dv;
-Cf = 1.328/(sqrt(Re));
+W = i; % weight, lbf
+S = 17.4;  % wing reference area, ft^2;
+A = 7.38; % wing aspect ratio
+C_D0 = 0.0065; % flaps up parasite drag coefficient
+e = 0.98; % airplane efficiency factor
 
-sdr = 0.4292120448;
+h = 0; % altitude, ft
+phi = 0; % bank angle, deg
 
-Cd0 = .0336;
-Dp = .5*d*(v(i)^2)*Cd0;
+h_m = convlength(h,'ft','m');
 
-Cl = L/(.5*d*(v(i)^2)*s);
-Cdi = Cl^2/(pi*AR*ef);
-Di = .5*d*(v(i)^2)*Cdi;
+[T, a, P, rho] = atmoscoesa(h_m, 'Warning');
 
-Dps = [Dps Dp];
-Dis = [Dis Di];
+rho = convdensity(rho,'kg/m^3','slug/ft^3');
 
+TAS_bg = sqrt((2*W) / (rho*S))...
+         *(1./(4*C_D0.^2 + C_D0.*pi*e*A*cos(phi)^2)).^(1/4); % TAS, fps
+     
+     KTAS_bg = convvel(TAS_bg,'ft/s','kts')';
+     
+     KCAS_bg = correctairspeed(KTAS_bg,a,P,'TAS','CAS')';
+     
+     gamma_bg_rad = asin( -sqrt((4.*C_D0')./(pi*e*A*cos(phi)^2 + 4.*C_D0')) );
+     
+     gamma_bg = convang(gamma_bg_rad,'rad','deg');
+     
+     D_bg = -W*sin(gamma_bg_rad);
+     
+     L_bg =  W*cos(gamma_bg_rad);
+     
+     qbar = dpressure([TAS_bg' zeros(size(TAS_bg,2),2)], rho);
+     
+     C_D_bg = D_bg./(qbar*S);
+C_L_bg = L_bg./(qbar*S);
+
+TAS = (70:200)'; % true airspeed, fps
+KTAS = convvel(TAS,'ft/s','kts')'; % true airspeed, kts
+KCAS = correctairspeed(KTAS,a,P,'TAS','CAS')'; % corrected airspeed, kts
+
+qbar = dpressure([TAS zeros(size(TAS,1),2)], rho);
+
+Dp = qbar*S.*C_D0;
+
+Di = (2*W^2)/(rho*S*pi*e*A).*(TAS.^-2);
+
+D = Dp + Di;
+
+L = W;
+
+%h1 = figure;
+%plot(KCAS,L./D);
+%title('L/D vs. KCAS');
+%xlabel('KCAS'); ylabel('L/D');
+%hold on
+%plot(KCAS_bg,L_bg/D_bg,'Marker','o','MarkerFaceColor','black',...
+  %  'MarkerEdgeColor','black','Color','white');
+%hold off
+%legend('L/D','L_{bg}/D_{bg}','Location','Best');
+%annotation('textarrow',[0.49 0.49],[0.23 0.12],'String','KCAS_{bg}');
+
+%h2 = figure;
+%plot(KCAS,Dp,KCAS,Di,KCAS,D);
+%title('Parasite, induced, and total drag curves');
+%xlabel('KCAS'); ylabel('Drag, lbf');
+%hold on
+%plot(KCAS_bg,D_bg,'Marker','o','MarkerFaceColor','black',...
+    %'MarkerEdgeColor','black','Color','white');
+%hold off
+%legend('Parasite, D_p','Induced, D_i','Total, D','D_{bg}','Location','Best');
+%annotation('textarrow',[0.49 0.49],[0.23 0.12],'String','KCAS_{bg}');
+
+speed = [speed KCAS_bg];
+t = [t i];
 end
 
-vt = sqrt((2*L)/(.5*d*s));
-vstall = sqrt((L)/(.5*d*s*1.8));
+plot(t,speed*.681818)
+xlabel('Weight (lbs)')
+ylabel('Speed  (mph)')
 
-Dpf = Dps(2:end);
-Dif = Dis(2:end);
-D = Dpf+Dif;
-eff = min(D);
-figure(1)
-plot(v,Dpf,'r')
-hold on
-plot(v,Dif,'b')
-hold on
-plot(v,D);
-xlabel('Velocity (m/s)');
-ylabel('Drag');
-legend('Parasitic Drag','Induced Drag','Drag')
-te = strcat('Cruise Speed = ',num2str(eff));
-text(6,8,te)
 
-vt
-vstall
+
+     
