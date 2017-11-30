@@ -45,7 +45,7 @@ wit = (take*10.76391)/11;%width in feet of wing
 
 DA = 22;%drag area
 V = vp;%stall velocity
-cd = .29; %standard drag coefficient of a plane
+cd = .05; %standard drag coefficient of a plane
 
 Drag = cd*DA*0.5*d*V^2;
 
