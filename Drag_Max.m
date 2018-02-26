@@ -1,7 +1,7 @@
 
 W = 55; % weight, lbf
-S = 17.4;  % wing reference area, ft^2;
-A = 7.38; % wing aspect ratio
+S = 29.07;  % wing reference area, ft^2;
+A = 7.31; % wing aspect ratio
 C_D0 = 0.0065; % flaps up parasite drag coefficient
 e = 0.98; % airplane efficiency factor
 
